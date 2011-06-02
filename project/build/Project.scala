@@ -1,10 +1,9 @@
 import sbt._
 
 class AndroidPlugin(info: ProjectInfo) extends PluginProject(info)
-  with posterous.Publish with sxr.Publish
 {
-  val publishTo = "Scala Tools Nexus" at "http://nexus.scala-tools.org/content/repositories/releases/"
-  Credentials(Path.fromFile(System.getProperty("user.home")) / ".ivy2" / ".credentials", log)
+  override def managedStyle = ManagedStyle.Maven
+  lazy val publishTo = Resolver.file("GitHub Pages", new java.io.File(System.getProperty("user.home"), "/devel/sattvik.github.com/maven"))
 
   val proguard = "net.sf.proguard" % "proguard" % "4.4"
   val ddmlib   = "com.google.android.tools" % "ddmlib" % "r10"
