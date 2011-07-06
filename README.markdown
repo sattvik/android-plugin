@@ -2,12 +2,16 @@
 
 Requires [sbt](http://simple-build-tool.googlecode.com/) and the [Android SDK](http://developer.android.com/sdk/index.html) (`brew install sbt android-sdk` when using [homebrew](http://github.com/mxcl/homebrew) on OSX).
 
+Also note that this plugin requires the 0.7.x release of sbt - it has not been
+ported to 0.10 yet (cf. [issue #50][]).
+
 Using a [giter8][g8] template is the easiest way to create a new
 project that uses the plugin. If you don't have giter8 installed:
 
 [g8]: https://github.com/n8han/giter8#readme
 
-    $ curl https://github.com/n8han/conscript/raw/master/setup.sh | sh
+    $ curl https:/raw.github.com/n8han/conscript/master/setup.sh | sh
+Directory name was wrong
     $ ~/bin/cs n8han/giter8
 
 Now create a new project with one of the Android templates:
@@ -21,6 +25,7 @@ skeleton tests, specs and activities.
 To build the package:
 
     $ cd <your app name>
+    $ export ANDROID_HOME=/path/to/sdk # or ANDROID_SDK_{HOME,ROOT}
     $ sbt # enter sbt's interactive mode
 
     > update
@@ -150,3 +155,4 @@ This code is based on work by Walter Chang
 
 [scala-on-android]: http://groups.google.com/group/scala-on-android
 [simple-build-tool]: http://groups.google.com/group/simple-build-tool
+[issue #50]: https://github.com/jberkel/android-plugin/issues/50

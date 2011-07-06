@@ -24,15 +24,17 @@ class ApkBuilder(project: Installable, debug: Boolean) {
   val builder = constructor.newInstance(
     project.packageApkPath.asFile, project.resourcesApkPath.asFile, project.classesDexPath.asFile, keyStore, new PrintStream(outputStream))
   setDebugMode(debug)
-  addNativeLibraries(project.nativeLibrariesPath.asFile, null)
 
   def build() = try {
+    project.log.info("Packaging "+project.packageApkPath)
+    addNativeLibraries(project.nativeLibrariesPath.asFile, null)
+    addResourcesFromJar(project.classesMinJarPath.asFile)
     sealApk
     None
   } catch {
     case e: Throwable => Some(e.getCause.getMessage)
   } finally {
-    project.log.info(outputStream.toString)
+    project.log.debug(outputStream.toString)
   }
   
   def getDebugKeystore = {
@@ -51,6 +53,17 @@ class ApkBuilder(project: Installable, debug: Boolean) {
       method.invoke(builder, nativeFolder, abiFilter)
     }
   } 
+
+  /// Copy most non class files from the given standard java jar file
+  ///
+  /// (used to let classloader.getResource work for legacy java libs
+  /// on android)
+  def addResourcesFromJar(jarFile: File) {
+    if (jarFile.exists) {
+      def method = klass.getMethod("addResourcesFromJar", classOf[File])
+      method.invoke(builder, jarFile)
+    }
+  }  
 
   def sealApk() {
     val method = klass.getMethod("sealApk")
